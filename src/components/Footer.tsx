@@ -1,38 +1,64 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
+import { Instagram, Facebook, Twitter, Youtube } from "lucide-react";
 
 export default function Footer() {
+  const [email, setEmail] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email) {
+      setSubscribed(true);
+      setEmail("");
+    }
+  };
+
+  const socials = [
+    { name: "Instagram", icon: Instagram, href: "#" },
+    { name: "Facebook", icon: Facebook, href: "#" },
+    { name: "Twitter", icon: Twitter, href: "#" },
+    { name: "YouTube", icon: Youtube, href: "#" },
+  ];
+
   return (
-    <footer className="bg-dark border-t border-white/5 py-16 px-6">
+    <footer className="bg-dark border-t border-white/[0.05] py-16 px-6">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-          <div className="md:col-span-2">
-            <h3
-              className="text-2xl font-bold mb-4"
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
-              <span className="gradient-text">Saffron</span>
-              <span className="text-white/60 font-light"> & </span>
-              <span className="gradient-text">Spice</span>
-            </h3>
-            <p className="text-white/40 text-sm leading-relaxed max-w-sm">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16">
+          <div className="lg:col-span-5">
+            <Link href="/" className="inline-block mb-6">
+              <span
+                className="text-2xl font-bold"
+                style={{ fontFamily: "'Playfair Display', serif" }}
+              >
+                <span className="gradient-text">Saffron</span>
+                <span className="text-white/40 font-light mx-1">&</span>
+                <span className="gradient-text">Spice</span>
+              </span>
+            </Link>
+            <p className="text-white/35 text-sm leading-relaxed max-w-sm mb-8">
               A culinary journey that transcends the ordinary. Where every meal
               is an experience, and every visit creates a lasting memory.
             </p>
-            <div className="flex gap-4 mt-6">
-              {["Instagram", "Facebook", "Twitter", "YouTube"].map((social) => (
+
+            <div className="flex gap-3">
+              {socials.map(({ name, icon: Icon, href }) => (
                 <a
-                  key={social}
-                  href="#"
-                  className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/40 hover:bg-gold/20 hover:text-gold transition-all duration-300 text-xs font-medium"
+                  key={name}
+                  href={href}
+                  aria-label={name}
+                  className="w-10 h-10 rounded-xl bg-white/[0.03] flex items-center justify-center text-white/30 hover:bg-gold/10 hover:text-gold transition-all duration-300 border border-white/[0.05] hover:border-gold/20"
                 >
-                  {social[0]}
+                  <Icon size={16} strokeWidth={1.5} />
                 </a>
               ))}
             </div>
           </div>
 
-          <div>
-            <h4 className="text-white font-semibold text-sm mb-4 uppercase tracking-wider">
+          <div className="lg:col-span-3">
+            <h4 className="text-white font-semibold text-sm mb-5 uppercase tracking-wider">
               Quick Links
             </h4>
             <ul className="space-y-3">
@@ -41,7 +67,7 @@ export default function Footer() {
                   <li key={link}>
                     <a
                       href={`#${link.toLowerCase()}`}
-                      className="text-white/40 text-sm hover:text-gold transition-colors duration-300"
+                      className="text-white/35 text-sm hover:text-gold transition-colors duration-300"
                     >
                       {link}
                     </a>
@@ -51,22 +77,22 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
-            <h4 className="text-white font-semibold text-sm mb-4 uppercase tracking-wider">
+          <div className="lg:col-span-2">
+            <h4 className="text-white font-semibold text-sm mb-5 uppercase tracking-wider">
               Hours
             </h4>
-            <ul className="space-y-3 text-sm text-white/40">
+            <ul className="space-y-3 text-sm text-white/35">
               <li className="flex justify-between">
                 <span>Tue - Thu</span>
-                <span>6PM - 10PM</span>
+                <span className="text-white/50">6PM - 10PM</span>
               </li>
               <li className="flex justify-between">
                 <span>Fri - Sat</span>
-                <span>6PM - 11PM</span>
+                <span className="text-white/50">6PM - 11PM</span>
               </li>
               <li className="flex justify-between">
                 <span>Sunday</span>
-                <span>5PM - 9PM</span>
+                <span className="text-white/50">5PM - 9PM</span>
               </li>
               <li className="flex justify-between text-white/20">
                 <span>Monday</span>
@@ -74,11 +100,39 @@ export default function Footer() {
               </li>
             </ul>
           </div>
+
+          <div className="lg:col-span-2">
+            <h4 className="text-white font-semibold text-sm mb-5 uppercase tracking-wider">
+              Newsletter
+            </h4>
+            {subscribed ? (
+              <div className="glass-card rounded-xl p-4 text-center">
+                <span className="text-gold text-sm">✓ Thanks for subscribing!</span>
+              </div>
+            ) : (
+              <form onSubmit={handleSubscribe} className="space-y-3">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Your email"
+                  className="input-field text-sm py-3"
+                  required
+                />
+                <button type="submit" className="w-full btn-primary text-sm py-3">
+                  Subscribe
+                </button>
+              </form>
+            )}
+            <p className="text-white/20 text-xs mt-3">
+              Get exclusive offers & updates
+            </p>
+          </div>
         </div>
 
-        <div className="border-t border-white/5 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="border-t border-white/[0.05] pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-white/20 text-xs">
-            &copy; 2026 Saffron & Spice. All rights reserved.
+            © 2026 Saffron & Spice. All rights reserved.
           </p>
           <div className="flex gap-6">
             <a
